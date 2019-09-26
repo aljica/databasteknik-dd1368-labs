@@ -1,0 +1,508 @@
+CREATE TABLE "movies" (
+	"id" integer NOT NULL,
+	"title" TEXT NOT NULL,
+	"release_year" integer NOT NULL,
+	"genre" integer NOT NULL,
+	"mature_content" BOOLEAN NOT NULL,
+	CONSTRAINT movies_pk PRIMARY KEY ("id")
+) WITH (
+  OIDS=FALSE
+);
+
+
+
+CREATE TABLE "series" (
+	"id" integer NOT NULL,
+	"title" TEXT NOT NULL,
+	"genre" integer NOT NULL,
+	"season_count" integer NOT NULL,
+	"mature_content" BOOLEAN NOT NULL,
+	CONSTRAINT series_pk PRIMARY KEY ("id")
+) WITH (
+  OIDS=FALSE
+);
+
+
+
+CREATE TABLE "seasons" (
+	"id" integer NOT NULL,
+	"series_id" integer NOT NULL,
+	"title" TEXT NOT NULL,
+	"season_number" integer NOT NULL,
+	"episode_count" integer NOT NULL,
+	CONSTRAINT seasons_pk PRIMARY KEY ("id")
+) WITH (
+  OIDS=FALSE
+);
+
+
+
+CREATE TABLE "episodes" (
+	"id" integer NOT NULL,
+	"title" TEXT NOT NULL,
+	"release_year" integer NOT NULL,
+	"season_id" integer NOT NULL,
+	"episode_number" integer NOT NULL,
+	CONSTRAINT episodes_pk PRIMARY KEY ("id")
+) WITH (
+  OIDS=FALSE
+);
+
+
+
+CREATE TABLE "users" (
+	"id" integer NOT NULL,
+	"name" TEXT NOT NULL,
+	"age" integer NOT NULL,
+	"email" TEXT NOT NULL,
+	"join_date" DATE NOT NULL,
+	"payment_status" BOOLEAN NOT NULL,
+	"expiry_date" DATE,
+	"filter" BOOLEAN NOT NULL,
+	CONSTRAINT users_pk PRIMARY KEY ("id")
+) WITH (
+  OIDS=FALSE
+);
+
+
+
+CREATE TABLE "production_company" (
+	"id" integer NOT NULL,
+	"name" TEXT NOT NULL,
+	CONSTRAINT production_company_pk PRIMARY KEY ("id")
+) WITH (
+  OIDS=FALSE
+);
+
+
+
+CREATE TABLE "produces" (
+	"company_id" integer NOT NULL,
+	"media_id" integer NOT NULL,
+	CONSTRAINT produces_pk PRIMARY KEY ("company_id","media_id")
+) WITH (
+  OIDS=FALSE
+);
+
+
+
+CREATE TABLE "watches" (
+	"user_id" integer NOT NULL,
+	"media_id" integer NOT NULL,
+	"cc_language" integer,
+	"audio_language" integer,
+	"rating" integer,
+	"finished" BOOLEAN NOT NULL,
+	"date_opened" timestamp NOT NULL,
+	CONSTRAINT watches_pk PRIMARY KEY ("user_id","media_id")
+) WITH (
+  OIDS=FALSE
+);
+
+
+
+CREATE TABLE "actors" (
+	"id" integer NOT NULL,
+	"name" TEXT NOT NULL,
+	CONSTRAINT actors_pk PRIMARY KEY ("id")
+) WITH (
+  OIDS=FALSE
+);
+
+
+
+CREATE TABLE "actors_in" (
+	"actor_id" integer NOT NULL,
+	"media_id" integer NOT NULL,
+	CONSTRAINT actors_in_pk PRIMARY KEY ("actor_id","media_id")
+) WITH (
+  OIDS=FALSE
+);
+
+
+
+CREATE TABLE "directors" (
+	"id" integer NOT NULL,
+	"name" TEXT NOT NULL,
+	CONSTRAINT directors_pk PRIMARY KEY ("id")
+) WITH (
+  OIDS=FALSE
+);
+
+
+
+CREATE TABLE "directed_by" (
+	"director_id" integer NOT NULL,
+	"media_id" integer NOT NULL,
+	CONSTRAINT directed_by_pk PRIMARY KEY ("director_id","media_id")
+) WITH (
+  OIDS=FALSE
+);
+
+
+
+CREATE TABLE "genres" (
+	"id" integer NOT NULL,
+	"name" TEXT NOT NULL,
+	CONSTRAINT genres_pk PRIMARY KEY ("id")
+) WITH (
+  OIDS=FALSE
+);
+
+
+
+CREATE TABLE "languages" (
+	"id" integer NOT NULL,
+	"name" TEXT NOT NULL,
+	CONSTRAINT languages_pk PRIMARY KEY ("id")
+) WITH (
+  OIDS=FALSE
+);
+
+
+
+CREATE TABLE "user_subscriptions" (
+	"user_id" integer NOT NULL,
+	"series_id" integer NOT NULL
+) WITH (
+  OIDS=FALSE
+);
+
+
+CREATE TABLE "parents" (
+	"parent_id" integer NOT NULL,
+	"child_id" integer NOT NULL
+) WITH (
+	OIDS=FALSE
+);
+
+
+CREATE TABLE "available_languages" (
+	"media_id" integer NOT NULL,
+	"language" integer NOT NULL
+) WITH (
+	OIDS=FALSE
+);
+
+
+CREATE TABLE "user_filters" (
+	"user_id" integer NOT NULL,
+	"type" text NOT NULL,
+	"name" text NOT NULL
+) WITH (
+	OIDS=FALSE
+);
+
+
+
+
+
+ALTER TABLE "movies" ADD CONSTRAINT "movies_fk0" FOREIGN KEY ("genre") REFERENCES "genres"("id");
+
+ALTER TABLE "series" ADD CONSTRAINT "series_fk0" FOREIGN KEY ("genre") REFERENCES "genres"("id");
+
+ALTER TABLE "seasons" ADD CONSTRAINT "seasons_fk0" FOREIGN KEY ("series_id") REFERENCES "series"("id");
+
+ALTER TABLE "episodes" ADD CONSTRAINT "episodes_fk0" FOREIGN KEY ("season_id") REFERENCES "seasons"("id");
+
+
+
+
+ALTER TABLE "watches" ADD CONSTRAINT "watches_fk0" FOREIGN KEY ("user_id") REFERENCES "users"("id");
+ALTER TABLE "watches" ADD CONSTRAINT "watches_fk1" FOREIGN KEY ("cc_language") REFERENCES "languages"("id");
+ALTER TABLE "watches" ADD CONSTRAINT "watches_fk2" FOREIGN KEY ("audio_language") REFERENCES "languages"("id");
+
+
+ALTER TABLE "actors_in" ADD CONSTRAINT "actors_in_fk0" FOREIGN KEY ("actor_id") REFERENCES "actors"("id");
+
+
+ALTER TABLE "directed_by" ADD CONSTRAINT "directed_by_fk0" FOREIGN KEY ("director_id") REFERENCES "directors"("id");
+
+
+
+ALTER TABLE "user_subscriptions" ADD CONSTRAINT "user_subscriptions_fk0" FOREIGN KEY ("user_id") REFERENCES "users"("id");
+ALTER TABLE "user_subscriptions" ADD CONSTRAINT "user_subscriptions_fk1" FOREIGN KEY ("series_id") REFERENCES "series"("id");
+
+ALTER TABLE "parents" ADD CONSTRAINT "users_fk0" FOREIGN KEY ("parent_id") REFERENCES "users"("id");
+ALTER TABLE "parents" ADD CONSTRAINT "users_fk1" FOREIGN KEY ("child_id") REFERENCES "users"("id");
+
+ALTER TABLE "available_languages" ADD CONSTRAINT "lang_fk0" FOREIGN KEY ("language") REFERENCES "languages"("id");
+
+ALTER TABLE "user_filters" ADD CONSTRAINT "filter_fk0" FOREIGN KEY ("user_id") REFERENCES "users"("id");
+
+
+
+insert into genres values(1, 'Crime');
+insert into genres values(2, 'Comedy');
+insert into genres values(3, 'Romance');
+insert into genres values(4, 'Action');
+insert into genres values(5, 'Thriller');
+insert into genres values(6, 'Horror');
+insert into genres values(7, 'Drama');
+
+insert into movies values(10001, 'Goodfellas', 1990, 1, true);
+insert into movies values(10002, 'The Terminator', 1984, 4, true);
+insert into movies values(10003, 'A Star Is Born', 2018, 2, false);
+insert into movies values(10004, 'The Grinch', 2018, 2, false);
+insert into movies values(10005, 'Moonlight', 2016, 7, true);
+insert into movies values(10006, 'Prisoners', 2013, 1, true);
+insert into movies values(10007, 'The Hangover', 2009, 2, true);
+insert into movies values(10008, 'Superbad', 2007, 2, true);
+insert into movies values(10009, 'The Babadook', 2014, 6, true);
+insert into movies values(10010, 'Call Me by Your Name', 2017, 3, true);
+insert into movies values(10011, 'The Notebook', 2004, 3, true);
+insert into movies values(10012, 'Sinister', 2012, 5, true);
+insert into movies values(10013, 'Shutter Island', 2010, 5, true);
+insert into movies values(10014, 'Searching', 2018, 7, true);
+
+insert into series values(20001, 'Breaking Bad', 1, 5, true);
+insert into series values(20002, 'Game of Thrones', 7, 7, true);
+insert into series values(20003, 'House of Cards', 7, 6, true);
+
+insert into seasons values(30001, 20001, 'Welcome', 1, 2);
+insert into seasons values(30002, 20001, 'Indeed', 2, 2);
+insert into seasons values(30003, 20002, 'First', 1, 2);
+insert into seasons values(30004, 20003, 'First Chapter', 2, 2);
+
+insert into episodes values(40001, 'Winter Is Coming', 2011, 30003, 1);
+insert into episodes values(40002, 'The Kingsroad', 2011, 30003, 2);
+insert into episodes values(40003, 'Chapter 1', 2013, 30004, 1);
+insert into episodes values(40004, 'Chapter 2', 2013, 30004, 2);
+insert into episodes values(40005, 'Pilot', 2008, 30001, 1);
+insert into episodes values(40006, 'Cats In The Bag', 2008, 30001, 2);
+insert into episodes values(40007, 'Seven Thirty-Seven', 2009, 30002, 1);
+insert into episodes values(40008, 'Grilled', 2009, 30002, 2);
+
+insert into users values(50001, 'Jonathan Bird', 20, 'bird@gmail.com',
+'2018-09-21', true, '2019-01-07', false);
+insert into users values(50002, 'Silviana Lila', 42, 'lila_silv@gmail.com',
+'2018-09-22', false, null, false);
+insert into users values(50003, 'Hussein Kuruha', 15, 'hussein@hotmail.com',
+'2018-06-07', true, '2019-06-07', true);
+insert into users values(50004, 'Adam Burt', 13, 'adam@gmail.com',
+'2018-10-19', false, null, true);
+insert into users values(50005, 'Camilla Johnson', 68, 'cammy_johnson@gmail.com',
+'2018-07-19', true, '2019-01-09', false);
+
+insert into production_company values(60001, 'High Bridge Productions');
+insert into production_company values(60002, 'HBO');
+insert into production_company values(60003, 'Netflix');
+
+insert into produces values(60001, 30001);
+insert into produces values(60001, 30002);
+insert into produces values(60002, 30003);
+insert into produces values(60003, 30004);
+
+insert into actors values(701, 'Bryan Cranston');
+insert into actors values(702, 'Emilia Clarke');
+insert into actors values(703, 'Kevin Spacey');
+insert into actors values(704, 'Ray Liotta');
+insert into actors values(705, 'Robert De Niro');
+insert into actors values(706, 'Arnold Schwarzenegger');
+insert into actors values(707, 'Jonah Hill');
+
+insert into actors_in values(701, 40005);
+insert into actors_in values(701, 40006);
+insert into actors_in values(701, 40007);
+insert into actors_in values(701, 40008);
+insert into actors_in values(701, 30001);
+insert into actors_in values(701, 30002); /* Actors in episodes & seasons (not necessary to include seasons and series tho, it seems) */
+insert into actors_in values(701, 20001);
+insert into actors_in values(702, 40001);
+insert into actors_in values(702, 40002);
+insert into actors_in values(702, 30003);
+insert into actors_in values(702, 20002);
+insert into actors_in values(703, 40003);
+insert into actors_in values(703, 40004);
+insert into actors_in values(703, 30004);
+insert into actors_in values(703, 20003);
+insert into actors_in values(704, 10001);
+insert into actors_in values(705, 10001);
+insert into actors_in values(706, 10002);
+insert into actors_in values(707, 10008);
+
+insert into directors values(801, 'Vince Gilligan');
+insert into directors values(802, 'Adam Bernstein');
+insert into directors values(803, 'David Fincher');
+insert into directors values(804, 'Tim Van Patten');
+insert into directors values(805, 'Martin Scorsese');
+insert into directors values(806, 'James Cameron');
+insert into directors values(807, 'Bradley Cooper');
+insert into directors values(808, 'Yarrow Cheney');
+insert into directors values(809, 'Barry Jenkins');
+insert into directors values(810, 'Denis Villeneuve');
+insert into directors values(811, 'Todd Phillips');
+insert into directors values(812, 'Jennifer Kent');
+insert into directors values(813, 'Luca Guadagnino');
+insert into directors values(814, 'Nick Cassavetes');
+insert into directors values(815, 'Scott Derrickson');
+insert into directors values(816, 'Aneesh Chaganty');
+insert into directors values(817, 'Greg Mottola');
+
+insert into directed_by values(801, 40005);
+insert into directed_by values(801, 40007);
+insert into directed_by values(802, 40006);
+insert into directed_by values(802, 40008);
+insert into directed_by values(803, 40003);
+insert into directed_by values(803, 40004);
+insert into directed_by values(804, 40001);
+insert into directed_by values(804, 40002);
+insert into directed_by values(805, 10001);
+insert into directed_by values(806, 10002);
+insert into directed_by values(807, 10003);
+insert into directed_by values(808, 10004);
+insert into directed_by values(809, 10005);
+insert into directed_by values(810, 10006);
+insert into directed_by values(811, 10007);
+insert into directed_by values(817, 10008);
+insert into directed_by values(812, 10009);
+insert into directed_by values(813, 10010);
+insert into directed_by values(814, 10011);
+insert into directed_by values(815, 10012);
+insert into directed_by values(805, 10013);
+insert into directed_by values(816, 10014);
+
+insert into languages values(901, 'Swedish');
+insert into languages values(902, 'English');
+insert into languages values(903, 'German');
+insert into languages values(904, 'French');
+insert into languages values(905, 'Arabic');
+insert into languages values(906, 'Turkish');
+
+insert into user_subscriptions values(50001, 20001);
+insert into user_subscriptions values(50002, 20002);
+insert into user_subscriptions values(50003, 20003);
+insert into user_subscriptions values(50001, 20002);
+insert into user_subscriptions values(50004, 20003);
+insert into user_subscriptions values(50005, 20002);
+
+insert into watches values(50001, 40001, 901, 902, 3, false, '2018-10-22 15:34:43');
+insert into watches values(50001, 10011, null, 902, 5, true, '2017-09-17 12:38:43');
+insert into watches values(50002, 40007, null, 903, 4, true, '2018-10-23 17:38:43');
+insert into watches values(50003, 10004, null, 905, null, true, '2008-10-22 15:34:43');
+insert into watches values(50004, 10003, 901, 902, 5, true, '2018-09-22 15:35:43');
+insert into watches values(50005, 40005, 902, 902, 5, true, '2018-06-12 11:02:43');
+insert into watches values(50005, 40006, 902, 902, 5, true, '2014-10-22 15:34:43');
+insert into watches values(50005, 10007, 902, 902, 4, true, '2018-10-22 19:34:43');
+insert into watches values(50005, 30001, 902, 902, 5, true, '2018-10-22 15:34:43'); /* User has
+finished watching the corresponding season, too, of the 2 episodes of that season of Breaking bad.
+*/
+
+insert into parents values(50005, 50004);
+insert into parents values(50002, 50003);
+
+insert into available_languages values(40001, 901);
+insert into available_languages values(40001, 902);
+insert into available_languages values(40001, 903);
+insert into available_languages values(40001, 904);
+insert into available_languages values(40001, 905);
+insert into available_languages values(40002, 901);
+insert into available_languages values(40002, 902);
+insert into available_languages values(40002, 903);
+insert into available_languages values(40002, 904);
+insert into available_languages values(40002, 905);
+insert into available_languages values(40003, 901);
+insert into available_languages values(40003, 902);
+insert into available_languages values(40003, 903);
+insert into available_languages values(40003, 904);
+insert into available_languages values(40003, 905);
+insert into available_languages values(40004, 901);
+insert into available_languages values(40004, 902);
+insert into available_languages values(40004, 903);
+insert into available_languages values(40004, 904);
+insert into available_languages values(40004, 905);
+insert into available_languages values(40005, 901);
+insert into available_languages values(40005, 902);
+insert into available_languages values(40005, 903);
+insert into available_languages values(40005, 904);
+insert into available_languages values(40005, 905);
+insert into available_languages values(40006, 901);
+insert into available_languages values(40006, 902);
+insert into available_languages values(40006, 903);
+insert into available_languages values(40006, 904);
+insert into available_languages values(40006, 905);
+insert into available_languages values(40007, 901);
+insert into available_languages values(40007, 902);
+insert into available_languages values(40007, 903);
+insert into available_languages values(40007, 904);
+insert into available_languages values(40007, 905);
+insert into available_languages values(40008, 901);
+insert into available_languages values(40008, 902);
+insert into available_languages values(40008, 903);
+insert into available_languages values(40008, 904);
+insert into available_languages values(40008, 905);
+insert into available_languages values(10001, 901);
+insert into available_languages values(10001, 902);
+insert into available_languages values(10001, 903);
+insert into available_languages values(10001, 904);
+insert into available_languages values(10001, 905);
+insert into available_languages values(10002, 901);
+insert into available_languages values(10002, 902);
+insert into available_languages values(10002, 903);
+insert into available_languages values(10002, 904);
+insert into available_languages values(10002, 905);
+insert into available_languages values(10003, 901);
+insert into available_languages values(10003, 902);
+insert into available_languages values(10003, 903);
+insert into available_languages values(10003, 904);
+insert into available_languages values(10003, 905);
+insert into available_languages values(10004, 901);
+insert into available_languages values(10004, 902);
+insert into available_languages values(10004, 903);
+insert into available_languages values(10004, 904);
+insert into available_languages values(10004, 905);
+insert into available_languages values(10005, 901);
+insert into available_languages values(10005, 902);
+insert into available_languages values(10005, 903);
+insert into available_languages values(10005, 904);
+insert into available_languages values(10005, 905);
+insert into available_languages values(10006, 901);
+insert into available_languages values(10006, 902);
+insert into available_languages values(10006, 903);
+insert into available_languages values(10006, 904);
+insert into available_languages values(10006, 905);
+insert into available_languages values(10007, 901);
+insert into available_languages values(10007, 902);
+insert into available_languages values(10007, 903);
+insert into available_languages values(10007, 904);
+insert into available_languages values(10007, 905);
+insert into available_languages values(10008, 901);
+insert into available_languages values(10008, 902);
+insert into available_languages values(10008, 903);
+insert into available_languages values(10008, 904);
+insert into available_languages values(10008, 905);
+insert into available_languages values(10009, 901);
+insert into available_languages values(10009, 902);
+insert into available_languages values(10009, 903);
+insert into available_languages values(10009, 904);
+insert into available_languages values(10009, 905);
+insert into available_languages values(10010, 901);
+insert into available_languages values(10010, 902);
+insert into available_languages values(10010, 903);
+insert into available_languages values(10010, 904);
+insert into available_languages values(10010, 905);
+insert into available_languages values(10011, 901);
+insert into available_languages values(10011, 902);
+insert into available_languages values(10011, 903);
+insert into available_languages values(10011, 904);
+insert into available_languages values(10011, 905);
+insert into available_languages values(10012, 901);
+insert into available_languages values(10012, 902);
+insert into available_languages values(10012, 903);
+insert into available_languages values(10012, 904);
+insert into available_languages values(10012, 905);
+insert into available_languages values(10013, 901);
+insert into available_languages values(10013, 902);
+insert into available_languages values(10013, 903);
+insert into available_languages values(10013, 904);
+insert into available_languages values(10013, 905);
+insert into available_languages values(10014, 901);
+insert into available_languages values(10014, 902);
+insert into available_languages values(10014, 903);
+insert into available_languages values(10014, 904);
+insert into available_languages values(10014, 905);
+
+insert into user_filters values(50003, 'Actor', 'Bryan Cranston');
+insert into user_filters values(50004, 'Genre', 'Crime');
+insert into user_filters values(50004, 'Genre', 'Thriller');
+insert into user_filters values(50004, 'Director', 'Martin Scorsese');

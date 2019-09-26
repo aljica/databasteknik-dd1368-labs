@@ -1,0 +1,26 @@
+/* Search function: show GUI. What is new to user is given by finished=true in watches relation.
+
+Finished seasons should automatically be flagged as complete. Show trigger auto_seasons_in_watches.psql, which inserts the season into the watches relation when the user has watched all episodes corresponding to that season.
+
+User can rate from 1-5 by the rating attribute in the watches relation. Show history  GUI. Same with select language and captioning.
+
+Series subscription feature: see the user_subscriptions relation. In conjunction with this, we might want to have a notifications table where a user's notifications are inserted, but not necessary I think. We can instead just have a trigger or such which notifies us of which users are subscribed to a series whenever an episode related to that seasons is inserted. We haven't focused on creating this properly in our implementation of NetHub, though. Hopefully that's okay.
+
+List of watching history: show history GUI. And user_filters for child filters.
+
+*/
+
+/* User can rate 1-5 & select language & captioning */
+
+SELECT *
+FROM watches;
+
+/* Series subscriptions */
+
+SELECT *
+FROM user_subscriptions;
+
+/* Child filters */
+
+SELECT *
+FROM user_filters;

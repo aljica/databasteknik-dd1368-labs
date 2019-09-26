@@ -1,0 +1,41 @@
+/* Making sure that seasons are automatically inserted into watches with the flag finished = false when the user clicks on an episode from that season.
+Additionally, we have to update the seasons-tuple and set finished = true if all corresponding season episodes are found in watches AND finished = true
+on all of them. */
+
+create function insert_season() returns trigger as $pname$
+begin
+
+if (
+  (select episode_count
+  from seasons s
+  join episodes e on s.id = e.season_id
+  where e.id=NEW.media_id)
+  =
+  (select count(*)
+  from watches
+  join episodes e on media_id=e.id
+  join seasons s on e.season_id=s.id
+  where season_id=(
+    select season_id
+    from episodes e
+    join seasons s on e.season_id=s.id
+    where e.id=NEW.media_id
+    )
+  and
+  finished=true
+  )
+) THEN
+
+insert into watches values(NEW.user_id, (select s.id from seasons s join episodes e on s.id=e.season_id where e.id=NEW.media_id), NEW.cc_language, NEW.audio_language, NEW.rating, true, NEW.date_opened);
+
+ELSE
+RETURN NEW;
+END IF;
+RETURN NEW;
+END;
+$pname$ language plpgsql;
+
+create trigger updateseasons
+after insert or update on watches
+for each row
+execute procedure insert_season();

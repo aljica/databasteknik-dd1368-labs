@@ -1,0 +1,31 @@
+/* Making sure that it's not possible to insert more episodes than given by episode_count in the seasons relation */
+
+create function episode_check() returns trigger as $pname$
+begin
+
+if (
+(
+select count(*)
+from episodes
+where season_id=NEW.season_id
+)
+>
+(
+select episode_count
+from seasons
+where id=NEW.season_id
+)
+)
+THEN
+raise exception 'More episodes than episode_count';
+
+ELSE
+RETURN NEW;
+END IF;
+END;
+$pname$ language plpgsql;
+
+create trigger checkepisodes
+after insert on episodes
+for each row
+execute procedure episode_check();

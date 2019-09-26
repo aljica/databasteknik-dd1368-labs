@@ -1,0 +1,10 @@
+WITH valid_cities AS (
+  SELECT * 
+  FROM cities c
+  WHERE c.latitude > 0
+  AND c.population_year = (
+    SELECT MAX(sub_c.population_year) 
+    FROM cities sub_c
+    WHERE sub_c.name = c.name
+  )
+)

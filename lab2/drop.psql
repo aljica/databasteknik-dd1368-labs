@@ -1,0 +1,65 @@
+ALTER TABLE "movies" DROP CONSTRAINT IF EXISTS "movies_fk0";
+
+ALTER TABLE "series" DROP CONSTRAINT IF EXISTS "series_fk0";
+
+ALTER TABLE "seasons" DROP CONSTRAINT IF EXISTS "seasons_fk0";
+
+ALTER TABLE "episodes" DROP CONSTRAINT IF EXISTS "episodes_fk0";
+
+ALTER TABLE "watches" DROP CONSTRAINT IF EXISTS "watches_fk0";
+
+ALTER TABLE "watches" DROP CONSTRAINT IF EXISTS "watches_fk1";
+
+ALTER TABLE "watches" DROP CONSTRAINT IF EXISTS "watches_fk2";
+
+ALTER TABLE "actors_in" DROP CONSTRAINT IF EXISTS "actors_in_fk0";
+
+ALTER TABLE "directed_by" DROP CONSTRAINT IF EXISTS "directed_by_fk0";
+
+ALTER TABLE "user_subscriptions" DROP CONSTRAINT IF EXISTS "user_subscriptions_fk0";
+
+ALTER TABLE "user_subscriptions" DROP CONSTRAINT IF EXISTS "user_subscriptions_fk1";
+
+ALTER TABLE "parents" DROP CONSTRAINT IF EXISTS "users_fk0";
+
+ALTER TABLE "parents" DROP CONSTRAINT IF EXISTS "users_fk1";
+
+ALTER TABLE "available_languages" DROP CONSTRAINT IF EXISTS "lang_fk0";
+
+ALTER TABLE "user_filters" DROP CONSTRAINT IF EXISTS "filter_fk0";
+
+DROP TABLE IF EXISTS "user_filters" cascade;
+
+DROP TABLE IF EXISTS "movies";
+
+DROP TABLE IF EXISTS "series";
+
+DROP TABLE IF EXISTS "seasons";
+
+DROP TABLE IF EXISTS "episodes";
+
+DROP TABLE IF EXISTS "users";
+
+DROP TABLE IF EXISTS "production_company";
+
+DROP TABLE IF EXISTS "produces";
+
+DROP TABLE IF EXISTS "watches";
+
+DROP TABLE IF EXISTS "actors";
+
+DROP TABLE IF EXISTS "actors_in";
+
+DROP TABLE IF EXISTS "directors";
+
+DROP TABLE IF EXISTS "directed_by";
+
+DROP TABLE IF EXISTS "genres";
+
+DROP TABLE IF EXISTS "available_languages";
+
+DROP TABLE IF EXISTS "languages";
+
+DROP TABLE IF EXISTS "user_subscriptions";
+
+DROP TABLE IF EXISTS "parents";
